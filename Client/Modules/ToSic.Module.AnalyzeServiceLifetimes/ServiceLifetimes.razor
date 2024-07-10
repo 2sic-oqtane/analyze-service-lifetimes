@@ -1,0 +1,63 @@
+@using ToSic.Module.AnalyzeServiceLifetimes.Services
+@using ToSic.Module.AnalyzeServiceLifetimes.Shared.Models
+@using ToSic.Module.AnalyzeServiceLifetimes.Shared.Services
+
+@namespace ToSic.Module.AnalyzeServiceLifetimes
+@inherits ModuleBase
+@inject IAnalyzeServiceLifetimesService AnalyzeServiceLifetimesService
+@inject NavigationManager NavigationManager
+
+@inject SingletonService Singleton
+@inject ScopedService Scoped
+@inject TransientService Transient
+
+<h2>Services Lifetimes @Title</h2>
+<p>
+    Place this module multiple times on the same page and on other pages, and compare the values below.
+    If the identifiers match, the service was reused / shared.
+</p>
+<h3>Client Services</h3>
+<ul>
+    @foreach (var service in ClientServices)
+    {
+        <li>@service.ServiceName: @service.Identifier</li>
+    }
+</ul>
+<h3>Server Services</h3>
+<ul>
+    @foreach (var service in ServerServices)
+    {
+        <li>@service.ServiceName: @service.Identifier</li>
+    }
+</ul>
+
+@code {
+    [Parameter]
+    public string Title { get; set; }
+
+    // uncomment the following line to use Static render mode for this component
+    // public override string RenderMode => RenderModes.Static;
+
+    List<ServiceLifetimeStatus> ClientServices;
+    List<ServiceLifetimeStatus> ServerServices;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            ClientServices =
+            [
+                Singleton.GetStatus("Client"),
+                Scoped.GetStatus("Client"),
+                Transient.GetStatus("Client")
+            ];
+
+            ServerServices = await AnalyzeServiceLifetimesService.GetServiceLifetimes(ModuleState.ModuleId);
+        }
+        catch (Exception ex)
+        {
+            await logger.LogError(ex, "Error Loading AnalyzeServiceLifetimes {Error}", ex.Message);
+            AddModuleMessage("Error", MessageType.Error);
+        }
+    }
+}

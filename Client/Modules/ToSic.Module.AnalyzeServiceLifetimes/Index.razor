@@ -7,60 +7,35 @@
 @inherits ModuleBase
 @inject IAnalyzeServiceLifetimesService AnalyzeServiceLifetimesService
 @inject NavigationManager NavigationManager
-@inject IStringLocalizer<Index> Localizer
 
 @inject SingletonService Singleton
 @inject ScopedService Scoped
 @inject TransientService Transient
 
-@if (_AnalyzeServiceLifetimess == null)
-{
-    <p><em>Loading...</em></p>
-}
-else
-{
-    <h2>Services Lifetimes etc.</h2>
-    <p>
-        Place this module multiple times on the same page and on other pages, and compare the values below.
-        If the identifiers match, the service was reused / shared.
-    </p>
-    <h3>Client Services</h3>
-    <ul>
-        <li>Singleton: @Singleton.Identifier</li>
-        <li>Scoped: @Scoped.Identifier</li>
-        <li>Transient: @Transient.Identifier</li>
-    </ul>
-    <h3>Server Services</h3>
-    <ul>
-        @foreach (var service in ServerServices)
-        {
-            <li>@service.ServiceName: @service.Identifier</li>
-        }
-    </ul>
+@* <h2>Services Lifetimes etc.</h2>
+<p>
+    Place this module multiple times on the same page and on other pages, and compare the values below.
+    If the identifiers match, the service was reused / shared.
+</p>
+<h3>Client Services</h3>
+<ul>
+    @foreach (var service in ClientServices)
+    {
+        <li>@service.ServiceName: @service.Identifier</li>
+    }
+</ul>
+<h3>Server Services</h3>
+<ul>
+    @foreach (var service in ServerServices)
+    {
+        <li>@service.ServiceName: @service.Identifier</li>
+    }
+</ul> *@
 
-    <ActionLink Action="Add" Security="SecurityAccessLevel.Edit" Text="Add AnalyzeServiceLifetimes" ResourceKey="Add" />
-    <br />
-    <br />
-    @if (@_AnalyzeServiceLifetimess.Count != 0)
-    {
-        <Pager Items="@_AnalyzeServiceLifetimess">
-            <Header>
-                <th style="width: 1px;">&nbsp;</th>
-                <th style="width: 1px;">&nbsp;</th>
-                <th>@Localizer["Name"]</th>
-            </Header>
-            <Row>
-                <td><ActionLink Action="Edit" Parameters="@($"id=" + context.AnalyzeServiceLifetimesId.ToString())" ResourceKey="Edit"  /></td>
-                <td><ActionDialog Header="Delete AnalyzeServiceLifetimes" Message="Are You Sure You Wish To Delete This AnalyzeServiceLifetimes?" Action="Delete" Security="SecurityAccessLevel.Edit" Class="btn btn-danger" OnClick="@(async () => await Delete(context))" ResourceKey="Delete"  Id="@context.AnalyzeServiceLifetimesId.ToString()" /></td>
-                <td>@context.Name</td>
-            </Row>
-        </Pager>
-    }
-    else
-    {
-        <p>@Localizer["Message.DisplayNone"]</p>
-    }
-}
+<hr/>
+<ServiceLifetimes Title="Interactive"></ServiceLifetimes>
+
+<ServiceLifetimes Title="Static"></ServiceLifetimes>
 
 @code {
     // uncomment the following line to use Static render mode for this component
@@ -69,49 +44,31 @@ else
     public override List<Resource> Resources =>
     [
         new() { ResourceType = ResourceType.Stylesheet, Url = ModulePath() + "Module.css" },
-    new() { ResourceType = ResourceType.Script, Url = ModulePath() + "Module.js" }
+        new() { ResourceType = ResourceType.Script, Url = ModulePath() + "Module.js" }
     ];
 
-    List<AnalyzeServiceLifetimes> _AnalyzeServiceLifetimess;
+    // List<AnalyzeServiceLifetimes> _AnalyzeServiceLifetimess;
 
-    List<ServiceLifetimeStatus> ClientServices;
-    List<ServiceLifetimeStatus> ServerServices;
+    // List<ServiceLifetimeStatus> ClientServices;
+    // List<ServiceLifetimeStatus> ServerServices;
 
-    protected override async Task OnInitializedAsync()
-    {
-        try
-        {
-            _AnalyzeServiceLifetimess = await AnalyzeServiceLifetimesService.GetAnalyzeServiceLifetimessAsync(ModuleState.ModuleId);
+    // protected override async Task OnInitializedAsync()
+    // {
+    //     try
+    //     {
+    //         ClientServices =
+    //         [
+    //             Singleton.GetStatus("Client"),
+    //             Scoped.GetStatus("Client"),
+    //             Transient.GetStatus("Client")
+    //         ];
 
-            ClientServices =
-            [
-                Singleton.GetStatus("Client"),
-                Scoped.GetStatus("Client"),
-                Transient.GetStatus("Client")
-            ];
-
-            ServerServices = await AnalyzeServiceLifetimesService.GetServiceLifetimes(ModuleState.ModuleId);
-        }
-        catch (Exception ex)
-        {
-            await logger.LogError(ex, "Error Loading AnalyzeServiceLifetimes {Error}", ex.Message);
-            AddModuleMessage(Localizer["Message.LoadError"], MessageType.Error);
-        }
-    }
-
-    private async Task Delete(AnalyzeServiceLifetimes AnalyzeServiceLifetimes)
-    {
-        try
-        {
-            await AnalyzeServiceLifetimesService.DeleteAnalyzeServiceLifetimesAsync(AnalyzeServiceLifetimes.AnalyzeServiceLifetimesId, ModuleState.ModuleId);
-            await logger.LogInformation("AnalyzeServiceLifetimes Deleted {AnalyzeServiceLifetimes}", AnalyzeServiceLifetimes);
-            _AnalyzeServiceLifetimess = await AnalyzeServiceLifetimesService.GetAnalyzeServiceLifetimessAsync(ModuleState.ModuleId);
-            StateHasChanged();
-        }
-        catch (Exception ex)
-        {
-            await logger.LogError(ex, "Error Deleting AnalyzeServiceLifetimes {AnalyzeServiceLifetimes} {Error}", AnalyzeServiceLifetimes, ex.Message);
-            AddModuleMessage(Localizer["Message.DeleteError"], MessageType.Error);
-        }
-    }
+    //         ServerServices = await AnalyzeServiceLifetimesService.GetServiceLifetimes(ModuleState.ModuleId);
+    //     }
+    //     catch (Exception ex)
+    //     {
+    //         await logger.LogError(ex, "Error Loading AnalyzeServiceLifetimes {Error}", ex.Message);
+    //         AddModuleMessage("Error", MessageType.Error);
+    //     }
+    // }
 }

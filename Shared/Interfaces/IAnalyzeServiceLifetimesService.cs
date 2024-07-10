@@ -8,15 +8,15 @@ namespace ToSic.Module.AnalyzeServiceLifetimes.Services
     {
         Task<List<ServiceLifetimeStatus>> GetServiceLifetimes(int moduleId);
 
-        Task<List<Models.AnalyzeServiceLifetimes>> GetAnalyzeServiceLifetimessAsync(int ModuleId);
+        //Task<List<Models.AnalyzeServiceLifetimes>> GetAnalyzeServiceLifetimessAsync(int ModuleId);
 
-        Task<Models.AnalyzeServiceLifetimes> GetAnalyzeServiceLifetimesAsync(int AnalyzeServiceLifetimesId, int ModuleId);
+        //Task<Models.AnalyzeServiceLifetimes> GetAnalyzeServiceLifetimesAsync(int AnalyzeServiceLifetimesId, int ModuleId);
 
-        Task<Models.AnalyzeServiceLifetimes> AddAnalyzeServiceLifetimesAsync(Models.AnalyzeServiceLifetimes AnalyzeServiceLifetimes);
+        //Task<Models.AnalyzeServiceLifetimes> AddAnalyzeServiceLifetimesAsync(Models.AnalyzeServiceLifetimes AnalyzeServiceLifetimes);
 
-        Task<Models.AnalyzeServiceLifetimes> UpdateAnalyzeServiceLifetimesAsync(Models.AnalyzeServiceLifetimes AnalyzeServiceLifetimes);
+        //Task<Models.AnalyzeServiceLifetimes> UpdateAnalyzeServiceLifetimesAsync(Models.AnalyzeServiceLifetimes AnalyzeServiceLifetimes);
 
-        Task DeleteAnalyzeServiceLifetimesAsync(int AnalyzeServiceLifetimesId, int ModuleId);
+        //Task DeleteAnalyzeServiceLifetimesAsync(int AnalyzeServiceLifetimesId, int ModuleId);
 
     }
 }
